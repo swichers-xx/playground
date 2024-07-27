@@ -1,0 +1,699 @@
+<html><head><base href="https://app.example.com/sms-survey-app/%20-%20Keep%20all%20the%20same,%20Build%20out%20remaining%20pages%20following%20the%20example%20of%20Dispatch%20page%20with%20supporting%20features.">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SMS Survey App</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        .app-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            min-height: 100vh;
+            padding-bottom: 60px;
+            padding-top: 120px;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 16px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 20px;
+        }
+        .top-toolbar {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            position: fixed;
+            top: 52px;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .last-send-result {
+            font-size: 14px;
+        }
+        .messages-per-minute {
+            width: 150px;
+            height: 30px;
+            background-color: #222;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+        .messages-per-minute-bar {
+            height: 100%;
+            background-color: #4CAF50;
+            width: 0%;
+            transition: width 0.5s ease-in-out;
+        }
+        .messages-per-minute-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .content {
+            padding: 16px;
+        }
+        .section {
+            margin-bottom: 24px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .section-header {
+            background-color: #e0e0e0;
+            padding: 12px 16px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .section-content {
+            padding: 16px;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        .tab-bar {
+            display: flex;
+            justify-content: space-around;
+            background-color: #333;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 10px;
+        }
+        .tab-button {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            text-align: center;
+        }
+        .tab-button i {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .active-tab {
+            color: #4CAF50;
+        }
+        .contact-list, .template-list {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 16px;
+        }
+        .contact-item, .template-item {
+            padding: 8px 12px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+        .contact-item:last-child, .template-item:last-child {
+            border-bottom: none;
+        }
+        .contact-item.selected, .template-item.selected {
+            background-color: #e0e0e0;
+        }
+        #messagePreview, #templatePreview {
+            white-space: pre-wrap;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 10px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        #imagePreview {
+            max-width: 100%;
+            margin-top: 12px;
+            border-radius: 4px;
+        }
+        .queue-info {
+            background-color: #e8f5e9;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+        }
+        .preview-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .preview-nav button {
+            background-color: #ddd;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        #selectAllButton, #createTemplateButton {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        #selectAllButton:hover, #createTemplateButton:hover {
+            background-color: #1976D2;
+        }
+        #csvUpload {
+            display: none;
+        }
+        #csvUploadLabel {
+            display: inline-block;
+            padding: 8px 12px;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        #csvUploadLabel:hover {
+            background-color: #e0e0e0;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <h1 id="pageTitle">SMS Survey App</h1>
+        </header>
+        
+        <div class="top-toolbar">
+            <div class="last-send-result">Last Send: <span id="lastSendResult">N/A</span></div>
+            <div class="messages-per-minute">
+                <div class="messages-per-minute-bar" id="messagesPerMinuteBar"></div>
+                <div class="messages-per-minute-text" id="messagesPerMinuteText">0 msg/min</div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Template Page -->
+            <div id="templatePage" class="page hidden">
+                <div class="section">
+                    <div class="section-header">
+                        Create New Template
+                        <button id="createTemplateButton">Create Template</button>
+                    </div>
+                    <div class="section-content">
+                        <div class="form-group">
+                            <label for="templateName">Template Name:</label>
+                            <input type="text" id="templateName" class="input-field" placeholder="Enter template name">
+                        </div>
+                        <div class="form-group">
+                            <label for="templateContent">Template Content:</label>
+                            <textarea id="templateContent" class="input-field" rows="4" placeholder="Enter template content. Use {name} for recipient's name."></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="section">
+                    <div class="section-header">Existing Templates</div>
+                    <div class="section-content">
+                        <div class="template-list" id="templateList">
+                            <!-- Template list will be populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+                <div class="section">
+                    <div class="section-header">Template Preview</div>
+                    <div class="section-content">
+                        <div id="templatePreview"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload Page -->
+            <div id="uploadPage" class="page hidden">
+                <div class="section">
+                    <div class="section-header">
+                        Upload Contacts
+                        <input type="file" id="csvUpload" accept=".csv" />
+                        <label for="csvUpload" id="csvUploadLabel">Upload CSV</label>
+                    </div>
+                    <div class="section-content">
+                        <p>Upload a CSV file with the following columns: name, phone</p>
+                        <div id="uploadStatus"></div>
+                    </div>
+                </div>
+                <div class="section">
+                    <div class="section-header">Uploaded Contacts</div>
+                    <div class="section-content">
+                        <div class="contact-list" id="uploadedContactList">
+                            <!-- Uploaded contacts will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Page -->
+            <div id="settingsPage" class="page hidden">
+                <div class="section">
+                    <div class="section-header">General Settings</div>
+                    <div class="section-content">
+                        <div class="form-group">
+                            <label for="sendDelay">Send Delay (seconds):</label>
+                            <input type="number" id="sendDelay" class="input-field" min="0" step="1" value="2">
+                        </div>
+                        <div class="form-group">
+                            <label for="maxMessagesPerMinute">Max Messages Per Minute:</label>
+                            <input type="number" id="maxMessagesPerMinute" class="input-field" min="1" step="1" value="30">
+                        </div>
+                    </div>
+                </div>
+                <div class="section">
+                    <div class="section-header">API Settings</div>
+                    <div class="section-content">
+                        <div class="form-group">
+                            <label for="apiKey">API Key:</label>
+                            <input type="password" id="apiKey" class="input-field" placeholder="Enter your API key">
+                        </div>
+                        <div class="form-group">
+                            <label for="apiEndpoint">API Endpoint:</label>
+                            <input type="url" id="apiEndpoint" class="input-field" placeholder="Enter API endpoint URL">
+                        </div>
+                        <button id="saveSettingsButton" class="button">Save Settings</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dispatch Page -->
+            <div id="dispatchPage" class="page">
+                <div class="section">
+                    <div class="section-header">
+                        Queue Information
+                    </div>
+                    <div class="section-content">
+                        <div class="queue-info">
+                            <p>Messages in queue: <span id="queueCount">0</span></p>
+                            <p>Estimated send time: <span id="estimatedTime">0 minutes</span></p>
+                        </div>
+                        <button id="addToQueueButton" class="button">Add Selected to Queue</button>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        Select Contacts
+                        <button id="selectAllButton">Select All</button>
+                    </div>
+                    <div class="section-content">
+                        <div class="contact-list" id="contactList">
+                            <!-- Contact list will be populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">Message Preview</div>
+                    <div class="section-content">
+                        <div class="preview-nav">
+                            <button id="prevPreview">&lt; Previous</button>
+                            <span id="previewIndex">Message 1 of 1</span>
+                            <button id="nextPreview">Next &gt;</button>
+                        </div>
+                        <div id="messagePreview"></div>
+                        <img id="imagePreview" src="" alt="Image preview" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">Dispatch Options</div>
+                    <div class="section-content">
+                        <button id="sendAndNewButton" class="button">Send and New</button>
+                        <button id="clearQueueButton" class="button">Clear Queue</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-bar">
+            <a href="#" class="tab-button" id="templateTab">
+                <i class="fas fa-pen"></i>
+                Template
+            </a>
+            <a href="#" class="tab-button" id="uploadTab">
+                <i class="fas fa-upload"></i>
+                Upload
+            </a>
+            <a href="#" class="tab-button" id="settingsTab">
+                <i class="fas fa-cog"></i>
+                Settings
+            </a>
+            <a href="#" class="tab-button active-tab" id="dispatchTab">
+                <i class="fas fa-paper-plane"></i>
+                Dispatch
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let contacts = [];
+        let templates = [];
+        let selectedContacts = [];
+        let messageQueue = [];
+        let currentPreviewIndex = 0;
+        let messagesPerMinute = 0;
+        let lastSendResult = "N/A";
+        let currentTemplate = null;
+
+        // Settings
+        let settings = {
+            sendDelay: 2,
+            maxMessagesPerMinute: 30,
+            apiKey: "",
+            apiEndpoint: ""
+        };
+
+        // Initialize the app
+        function initApp() {
+            loadContacts();
+            loadTemplates();
+            loadSettings();
+            updateQueueInfo();
+            updateMessagePreview();
+            setupEventListeners();
+        }
+
+        // Load contacts (simulated)
+        function loadContacts() {
+            contacts = [
+                { id: 1, name: "John Doe", phone: "+1234567890" },
+                { id: 2, name: "Jane Smith", phone: "+1987654321" },
+                { id: 3, name: "Alice Johnson", phone: "+1122334455" },
+                { id: 4, name: "Bob Williams", phone: "+1567890123" },
+                { id: 5, name: "Charlie Brown", phone: "+1345678901" }
+            ];
+            populateContactList();
+        }
+
+        // Load templates (simulated)
+        function loadTemplates() {
+            templates = [
+                { id: 1, name: "Default Survey", content: "Hello {name}, this is a survey message. How likely are you to recommend our service to a friend or colleague?" },
+                { id: 2, name: "Follow-up", content: "Hi {name}, thank you for participating in our survey. Do you have any additional feedback for us?" }
+            ];
+            populateTemplateList();
+        }
+
+        // Load settings (simulated)
+        function loadSettings() {
+            // In a real app, this would load from local storage or a server
+            document.getElementById('sendDelay').value = settings.sendDelay;
+            document.getElementById('maxMessagesPerMinute').value = settings.maxMessagesPerMinute;
+            document.getElementById('apiKey').value = settings.apiKey;
+            document.getElementById('apiEndpoint').value = settings.apiEndpoint;
+        }
+
+        // Populate contact list
+        function populateContactList() {
+            const contactList = document.getElementById('contactList');
+            contactList.innerHTML = '';
+            contacts.forEach(contact => {
+                const contactItem = document.createElement('div');
+                contactItem.className = 'contact-item';
+                contactItem.textContent = `${contact.name} - ${contact.phone}`;
+                contactItem.addEventListener('click', () => toggleContactSelection(contact, contactItem));
+                contactList.appendChild(contactItem);
+            });
+        }
+
+        // Populate template list
+        function populateTemplateList() {
+            const templateList = document.getElementById('templateList');
+            templateList.innerHTML = '';
+            templates.forEach(template => {
+                const templateItem = document.createElement('div');
+                templateItem.className = 'template-item';
+                templateItem.textContent = template.name;
+                templateItem.addEventListener('click', () => selectTemplate(template, templateItem));
+                templateList.appendChild(templateItem);
+            });
+        }
+
+        // Toggle contact selection
+        function toggleContactSelection(contact, element) {
+            const index = selectedContacts.findIndex(c => c.id === contact.id);
+            if (index > -1) {
+                selectedContacts.splice(index, 1);
+                element.classList.remove('selected');
+            } else {
+                selectedContacts.push(contact);
+                element.classList.add('selected');
+            }
+            updateQueueInfo();
+        }
+
+        // Select template
+        function selectTemplate(template, element) {
+            document.querySelectorAll('.template-item').forEach(item => item.classList.remove('selected'));
+            element.classList.add('selected');
+            currentTemplate = template;
+            document.getElementById('templatePreview').textContent = template.content;
+        }
+
+        // Update queue information
+        function updateQueueInfo() {
+            document.getElementById('queueCount').textContent = messageQueue.length + selectedContacts.length;
+            const estimatedTime = (messageQueue.length + selectedContacts.length) * settings.sendDelay;
+            document.getElementById('estimatedTime').textContent = `${estimatedTime} seconds`;
+        }
+
+        // Add selected contacts to queue
+        function addToQueue() {
+            if (!currentTemplate) {
+                alert('Please select a template first.');
+                return;
+            }
+            messageQueue = messageQueue.concat(selectedContacts.map(contact => ({
+                contact,
+                message: currentTemplate.content.replace('{name}', contact.name)
+            })));
+            selectedContacts = [];
+            document.querySelectorAll('.contact-item').forEach(item => item.classList.remove('selected'));
+            updateQueueInfo();
+            updateMessagePreview();
+        }
+
+        // Update message preview
+        function updateMessagePreview() {
+            const preview = document.getElementById('messagePreview');
+            const previewIndex = document.getElementById('previewIndex');
+            if (messageQueue.length > 0) {
+                const message = messageQueue[currentPreviewIndex];
+                preview.textContent = message.message;
+                previewIndex.textContent = `Message ${currentPreviewIndex + 1} of ${messageQueue.length}`;
+            } else {
+                preview.textContent = 'No messages in queue.';
+                previewIndex.textContent = 'Message 0 of 0';
+            }
+        }
+
+        // Send and move to next message
+        function sendAndNew() {
+            if (messageQueue.length > 0) {
+                const message = messageQueue.shift();
+                console.log(`Sending message to ${message.contact.name} at ${message.contact.phone}: ${message.message}`);
+                lastSendResult = `Sent to ${message.contact.name}`;
+                document.getElementById('lastSendResult').textContent = lastSendResult;
+                updateQueueInfo();
+                updateMessagePreview();
+                updateMessagesPerMinute();
+            } else {
+                alert('No messages in queue to send.');
+            }
+        }
+
+        // Clear the message queue
+        function clearQueue() {
+            messageQueue = [];
+            currentPreviewIndex = 0;
+            updateQueueInfo();
+            updateMessagePreview();
+        }
+
+        // Select all contacts
+        function selectAll() {
+            selectedContacts = [...contacts];
+            document.querySelectorAll('.contact-item').forEach(item => item.classList.add('selected'));
+            updateQueueInfo();
+        }
+
+        // Handle CSV upload
+        function handleCSVUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const csv = e.target.result;
+                    const lines = csv.split('\n');
+                    const headers = lines[0].split(',');
+                    const nameIndex = headers.indexOf('name');
+                    const phoneIndex = headers.indexOf('phone');
+                    
+                    contacts = lines.slice(1).map((line, index) => {
+                        const values = line.split(',');
+                        return {
+                            id: index + 1,
+                            name: values[nameIndex],
+                            phone: values[phoneIndex]
+                        };
+                    });
+                    
+                    populateContactList();
+                    document.getElementById('uploadStatus').textContent = `Uploaded ${contacts.length} contacts successfully.`;
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        // Update messages per minute display
+        function updateMessagesPerMinute() {
+            messagesPerMinute++;
+            const bar = document.getElementById('messagesPerMinuteBar');
+            const text = document.getElementById('messagesPerMinuteText');
+            const percentage = (messagesPerMinute / settings.maxMessagesPerMinute) * 100;
+            bar.style.width = `${Math.min(percentage, 100)}%`;
+            text.textContent = `${messagesPerMinute} msg/min`;
+
+            // Reset messages per minute after 60 seconds
+            setTimeout(() => {
+                messagesPerMinute--;
+                updateMessagesPerMinute();
+            }, 60000);
+        }
+
+        // Create new template
+        function createTemplate() {
+            const name = document.getElementById('templateName').value;
+            const content = document.getElementById('templateContent').value;
+            if (name && content) {
+                const newTemplate = { id: templates.length + 1, name, content };
+                templates.push(newTemplate);
+                populateTemplateList();
+                document.getElementById('templateName').value = '';
+                document.getElementById('templateContent').value = '';
+                alert('Template created successfully!');
+            } else {
+                alert('Please enter both template name and content.');
+            }
+        }
+
+        // Save settings
+        function saveSettings() {
+            settings.sendDelay = parseInt(document.getElementById('sendDelay').value);
+            settings.maxMessagesPerMinute = parseInt(document.getElementById('maxMessagesPerMinute').value);
+            settings.apiKey = document.getElementById('apiKey').value;
+            settings.apiEndpoint = document.getElementById('apiEndpoint').value;
+            // In a real app, you would save these to local storage or send to a server
+            alert('Settings saved successfully!');
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            document.getElementById('addToQueueButton').addEventListener('click', addToQueue);
+            document.getElementById('sendAndNewButton').addEventListener('click', sendAndNew);
+            document.getElementById('clearQueueButton').addEventListener('click', clearQueue);
+            document.getElementById('prevPreview').addEventListener('click', () => {
+                if (currentPreviewIndex > 0) {
+                    currentPreviewIndex--;
+                    updateMessagePreview();
+                }
+            });
+            document.getElementById('nextPreview').addEventListener('click', () => {
+                if (currentPreviewIndex < messageQueue.length - 1) {
+                    currentPreviewIndex++;
+                    updateMessagePreview();
+                }
+            });
+            document.getElementById('selectAllButton').addEventListener('click', selectAll);
+            document.getElementById('csvUpload').addEventListener('change', handleCSVUpload);
+            document.getElementById('createTemplateButton').addEventListener('click', createTemplate);
+            document.getElementById('saveSettingsButton').addEventListener('click', saveSettings);
+
+            // Tab navigation
+            document.querySelectorAll('.tab-button').forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetPage = this.id.replace('Tab', 'Page');
+                    showPage(targetPage);
+                });
+            });
+        }
+
+        // Show selected page
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
+            document.getElementById(pageId).classList.remove('hidden');
+            document.querySelectorAll('.tab-button').forEach(tab => tab.classList.remove('active-tab'));
+            document.getElementById(pageId.replace('Page', 'Tab')).classList.add('active-tab');
+            document.getElementById('pageTitle').textContent = pageId.replace('Page', '').charAt(0).toUpperCase() + pageId.replace('Page', '').slice(1);
+        }
+
+        // Initialize the app
+        initApp();
+    </script>
+</body>
+</html>
